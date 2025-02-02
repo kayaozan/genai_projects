@@ -14,13 +14,12 @@ jobs:
       - name: Get repository list
         id: repo_list
         run: |
-          REPO_LIST=$(curl -s -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
-          | jq -r '.items[] | "[\(.name)](\(.html_url))\n\(.description)"')
           {
             echo "repolist=EOF"
-            $REPO_LIST
+            curl -s -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
+          | jq -r '.items[] | "[\(.name)](\(.html_url))\n\(.description)"'
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
