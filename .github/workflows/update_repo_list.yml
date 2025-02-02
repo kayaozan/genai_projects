@@ -28,8 +28,8 @@ jobs:
           repolist: ${{ steps.repo_list.outputs.repolist }}
         run: |
           echo "# My LLM Projects" > README.md
-          echo "This repository is simply a homepage for my LLM projects. You may find them below." > README.md
-          echo "" > README.md
+          echo "This repository is simply a homepage for my LLM projects. You may find them below." >> README.md
+          echo "" >> README.md
           echo "$repolist" >> README.md
 
       - name: Commit changes
