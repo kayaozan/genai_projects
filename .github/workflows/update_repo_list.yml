@@ -15,7 +15,7 @@ jobs:
         id: repo_list
         run: |
           {
-            echo "repolist=EOF"
+            echo "repolist<<EOF"
             curl -s -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
