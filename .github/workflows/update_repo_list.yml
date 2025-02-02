@@ -1,8 +1,8 @@
 name: Update Repository List
 
 on: push
-  #schedule:
-  #  - cron: '0 0 * * *' # Runs daily at midnight UTC
+#  schedule:
+#    - cron: '0 0 * * *'
 
 jobs:
   update:
@@ -14,19 +14,16 @@ jobs:
       - name: Get repository list
         id: repo_list
         run: |
-          REPO_LIST=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan" | jq -r '.items | "[\(.full_name)](https://github.com/\(.full_name))\n\(.description // "")"')
+          REPO_LIST=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan" | jq -r '.items | map("[\(.full_name)](https://github.com/\(.full_name))\n\(.description // \" \")") | paste -s -d'')
           echo "::set-output name=list::$REPO_LIST"
 
       - name: Update README
         run: |
-          echo "# My LLM Projects" > README.md
-          echo "This repository is simply a homepage for my LLM projects for easy access." > README.md
+          echo "# Repositories" > README.md
           echo "${{ steps.repo_list.outputs.list }}" >> README.md
-          done
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Update repository list'
           file: README.md
-
