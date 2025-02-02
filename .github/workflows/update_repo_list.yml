@@ -19,7 +19,7 @@ jobs:
             curl -s -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
-          | jq -r '.items[] | "[\(.name)](\(.html_url))\n\(.description)"'
+          | jq -r '.items[] | "[\(.name)](\(.html_url))\n\n\(.description)"'
             echo EOF
           } >> "$GITHUB_OUTPUT"
 
@@ -27,7 +27,8 @@ jobs:
         env:
           repolist: ${{ steps.repo_list.outputs.repolist }}
         run: |
-          echo "# Repositories" > README.md
+          echo "# My LLM Projects" > README.md
+          echo "This repository is simply a homepage for my LLM projects. You may find them below.\n\n" > README.md
           echo "$repolist" >> README.md
 
       - name: Commit changes
