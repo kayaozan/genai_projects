@@ -14,7 +14,11 @@ jobs:
       - name: Get repository list
         id: repo_list
         run: |
-          REPO_LIST=$(curl -s -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan" | jq -r '.items | map("[\(.full_name)](https://github.com/\(.full_name))\n\(.description // \" \")")'
+          REPO_LIST=$(curl -s -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
+          | jq -r '.items \
+          | "[\(.full_name)](\(.html_url))\n\(.description)")
           echo "::set-output name=list::$REPO_LIST"
 
       - name: Update README
