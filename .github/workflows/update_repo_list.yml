@@ -18,12 +18,12 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
           | jq -r '.items')
-          echo "list=$REPO_LIST" >> $GITHUB_OUTPUT
+#          echo "list=$REPO_LIST" >> $GITHUB_OUTPUT
 
       - name: Update README
         run: |
           echo "# Repositories" > README.md
-          echo "${{ $GITHUB_OUTPUT }}" >> README.md
+          echo "${{ $REPO_LIST }}" >> README.md
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
