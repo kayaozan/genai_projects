@@ -27,8 +27,8 @@ jobs:
         env:
           repolist: ${{ steps.repo_list.outputs.repolist }}
         run: |
-          echo "# My LLM Projects" > README.md
-          echo "This repository is simply a homepage for all my LLM projects. You may find them below." >> README.md
+          echo "# My GenAI Projects" > README.md
+          echo "This repository is simply a homepage for all my Generative AI projects. You may find them below." >> README.md
           echo "" >> README.md
           echo "$repolist" >> README.md
 
