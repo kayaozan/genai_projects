@@ -1,8 +1,8 @@
 name: Update Repository List
 
-on:
-  schedule:
-    - cron: '0 * * * *'
+on: push
+#  schedule:
+#    - cron: '0 * * * *'
 
 jobs:
   update:
@@ -18,7 +18,7 @@ jobs:
             echo "repolist<<EOF"
             curl -s -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/search/repositories?q=topic:llm+user:kayaozan+sort:author-date-asc" \
+            "https://api.github.com/search/repositories?q=topic:genai+user:kayaozan+sort:author-date-asc" \
             | jq -r '.items[] | "###\n[\(.name)](\(.html_url))\n\n\(.description // "")\n"'
             echo EOF
           } >> "$GITHUB_OUTPUT"
