@@ -1,8 +1,8 @@
 name: Update Repository List
 
-on: push
-#  schedule:
-#    - cron: '0 * * * *'
+on:
+  schedule:
+    - cron: '0 * * * *'
 
 jobs:
   update:
@@ -23,7 +23,8 @@ jobs:
               url=$(echo "$repos" | jq -r ".items[] | select(.name == \"$repo\") | .html_url")
               description=$(echo "$repos" | jq -r ".items[] | select(.name == \"$repo\") | .description // \"\"")
       
-              screenshot_url=$(curl -s "https://raw.githubusercontent.com/kayaozan/$repo/main/README.md" | grep Screenshot | grep -oP '(?<=\().*(?=\))')
+              screenshot_url=$(curl -s "https://raw.githubusercontent.com/kayaozan/$repo/main/README.md" \
+              | grep Screenshot | grep -oP '(?<=\().*(?=\))')
         
               echo "###"
               echo "[$repo]($url)"
@@ -32,7 +33,7 @@ jobs:
               echo ""
               
               if [ ! -z "$screenshot_url" ]; then
-                echo "<img src=\"$screenshot_url\" width=150>"
+                echo "<img src=\"$screenshot_url\" width=250>"
                 echo ""
               fi
             done
