@@ -1,8 +1,8 @@
 name: Update Repository List
 
-on:
-  schedule:
-    - cron: '0 * * * *'
+on: push
+#  schedule:
+#    - cron: '0 * * * *'
 
 jobs:
   update:
@@ -16,11 +16,27 @@ jobs:
         run: |
           {
             echo "repolist<<EOF"
-            curl -s -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/search/repositories?q=topic:genai+user:kayaozan+sort:updated-asc" \
-            | jq -r '.items[] | "###\n[\(.name)](\(.html_url))\n\n\(.description // "")\n"'
-            echo EOF
+            repos=$(curl -s -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/search/repositories?q=topic:genai+user:kayaozan+sort:updated-asc")
+    
+            for repo in $(echo "$repos" | jq -r '.items[] | .name'); do
+              url=$(echo "$repos" | jq -r ".items[] | select(.name == \"$repo\") | .html_url")
+              description=$(echo "$repos" | jq -r ".items[] | select(.name == \"$repo\") | .description // \"\"")
+      
+              screenshot_url=$(curl -s "https://raw.githubusercontent.com/kayaozan/$repo/main/README.md" | grep Screenshot | grep -oP '(?<=\().*(?=\))')
+        
+              echo "###"
+              echo "[$repo]($url)"
+              echo "" 
+              echo "$description"
+              echo ""
+              
+              if [ ! -z "$screenshot_url" ]; then
+                echo "<img src=\"$screenshot_url\" width=150>"
+                echo ""
+              fi
+            done
+            echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
       - name: Update README
